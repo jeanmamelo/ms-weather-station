@@ -1,0 +1,10 @@
+spotify:
+  credential: BQDtDgmjcZizQnY6J5yy-qaksmnPdgCKheNP3xDZshXla4BkgKf4XSv02WgHUDfL2xorKUXszEk_-b0dc4y5yIbML6LyyGU5Ptg04IiduRYlh5-xfJPZeMhLbWHM0hufL9OtBHUOwk9EpKj6Mc29RisnfBGFP8tokcw
+  endpoints:
+    playlists-by-category: https://api.spotify.com/v1/browse/categories/{category_id}/playlists
+    playlist-by-id: https://api.spotify.com/v1/playlists/{playlist_id}
+open-weather:
+  credential: ece9972ddb4f03bb4bd686f5b1c906c8
+  endpoints:
+    location-by-coordinates: api.openweathermap.org/data/2.5/weather?lat={lat}&lon={lon}&appid={key}
+    location-by-city-name: api.openweathermap.org/data/2.5/weather?q={city}&appid={key}
