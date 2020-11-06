@@ -1,8 +1,11 @@
 spotify:
-  credential: BQDtDgmjcZizQnY6J5yy-qaksmnPdgCKheNP3xDZshXla4BkgKf4XSv02WgHUDfL2xorKUXszEk_-b0dc4y5yIbML6LyyGU5Ptg04IiduRYlh5-xfJPZeMhLbWHM0hufL9OtBHUOwk9EpKj6Mc29RisnfBGFP8tokcw
+  credentials:
+    bearer: BQAF_haXLJhXZP7r3EayKmVcQnaXGHlJhjuXC0KPS3a7smyRGnUV8VKuZCScnzlSbFS-xHoADihUQtEEJVc
+    client-id: 0aacee2520c2453ba0d48a11246017ea
+    client-secret: 7a020201e09a4637a218b76212fbba13
   endpoints:
-    playlists-by-category: https://api.spotify.com/v1/browse/categories/{category_id}/playlists
-    playlist-by-id: https://api.spotify.com/v1/playlists/{playlist_id}
+    playlists-by-category: https://api.spotify.com/v1/browse/categories/%s/playlists
+    playlist-by-id: https://api.spotify.com/v1/playlists/%s
 open-weather:
   credential: ece9972ddb4f03bb4bd686f5b1c906c8
   endpoints:

@@ -15,13 +15,7 @@ import java.util.List;
 public class PlaylistService {
 
     public List<PlaylistResponse> getPlaylists() {
-        return Collections.singletonList(PlaylistResponse.builder()
-                        .artists(Collections.singletonList(ArtistResponse.builder()
-                                .name("Babler")
-                                .build()))
-                        .name("Nelson")
-                        .popularity(98)
-                        .build());
+        return null;
     }
 
 }
