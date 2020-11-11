@@ -1,13 +1,13 @@
 spotify:
   credentials:
-    bearer: BQAF_haXLJhXZP7r3EayKmVcQnaXGHlJhjuXC0KPS3a7smyRGnUV8VKuZCScnzlSbFS-xHoADihUQtEEJVc
     client-id: 0aacee2520c2453ba0d48a11246017ea
     client-secret: 7a020201e09a4637a218b76212fbba13
   endpoints:
     playlists-by-category: https://api.spotify.com/v1/browse/categories/%s/playlists
-    playlist-by-id: https://api.spotify.com/v1/playlists/%s
+    playlist-by-id: https://api.spotify.com/v1/playlists/%s/tracks
+    generate-token: https://accounts.spotify.com/api/token
 open-weather:
   credential: ece9972ddb4f03bb4bd686f5b1c906c8
   endpoints:
-    location-by-coordinates: api.openweathermap.org/data/2.5/weather?lat={lat}&lon={lon}&appid={key}
-    location-by-city-name: api.openweathermap.org/data/2.5/weather?q={city}&appid={key}
+    location-by-coordinates: api.openweathermap.org/data/2.5/weather?lat=%s&lon=%s&appid=%s&units=metric
+    location-by-city-name: api.openweathermap.org/data/2.5/weather?q=%s&appid=%s&units=metric

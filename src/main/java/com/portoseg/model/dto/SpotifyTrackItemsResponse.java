@@ -6,14 +6,13 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-@Builder
-@Setter
 @Getter
-@NoArgsConstructor
+@Setter
 @AllArgsConstructor
-public class ArtistResponse {
+@NoArgsConstructor
+@Builder
+public class SpotifyTrackItemsResponse {
 
-    private String name;
-
+    private SpotifyTrackResponse track;
 
 }
