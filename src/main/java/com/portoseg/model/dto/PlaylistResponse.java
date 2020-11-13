@@ -6,6 +6,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -16,18 +17,17 @@ import java.util.stream.Collectors;
 @AllArgsConstructor
 public class PlaylistResponse {
 
-    private List<ArtistResponse> artists;
     private String name;
     private Integer popularity;
+    private List<ArtistResponse> artists;
 
     public static PlaylistResponse valueOf(SpotifyTrackItemsResponse response) {
 
-        List<ArtistResponse> artists = response.getTrack().getArtists()
-            .stream()
-            .map(artist -> {
-                return ArtistResponse.builder().name(artist.getName()).build();
-            })
-            .collect(Collectors.toList());
+        List<ArtistResponse> artists = new ArrayList<>();
+
+        response.getTrack().getArtists().forEach(artist -> artists.add(ArtistResponse.builder()
+                .name(artist.getName())
+                .build()));
 
         return PlaylistResponse.builder()
                 .artists(artists)

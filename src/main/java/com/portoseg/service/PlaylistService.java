@@ -15,6 +15,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Service
@@ -24,9 +25,9 @@ public class PlaylistService {
     private final OpenWeatherClient openWeatherClient;
     private final SpotifyClient spotifyClient;
 
-    public List<TrackResponse> getTracks(String cityName) {
+    public TrackResponse getTracks(String cityName, String lat, String lon) {
 
-        OpenWeatherResponse temperatureByCityName = openWeatherClient.getTemperatureByCityName(cityName);
+        OpenWeatherResponse temperatureByCityName = openWeatherClient.getTemperatureByLocation(cityName, lat, lon);
 
         String category = getCategory(temperatureByCityName);
 
@@ -39,7 +40,9 @@ public class PlaylistService {
 
         SpotifyPlaylistByIdResponse tracksByPlaylistId = spotifyClient.getTracksByPlaylistId(playlistId.getId());
 
-        return null;
+        List<PlaylistResponse> tracks = tracksByPlaylistId.getItems().stream().map(PlaylistResponse::valueOf).collect(Collectors.toList());
+
+        return TrackResponse.builder().tracks(tracks).build();
     }
 
     private String getCategory(OpenWeatherResponse temperatureByCityName) {
@@ -49,7 +52,7 @@ public class PlaylistService {
             response = CategoryEnum.CHILL.getDescription();
         } else if(temperatureByCityName.getMain().getTemp() > 10 && temperatureByCityName.getMain().getTemp() <= 20) {
             response = CategoryEnum.FOCUS.getDescription();
-        } else if(temperatureByCityName.getMain().getTemp() > 30) {
+        } else if(temperatureByCityName.getMain().getTemp() > 20) {
             response = CategoryEnum.PARTY.getDescription();
         } else {
             response = CategoryEnum.MOOD.getDescription();

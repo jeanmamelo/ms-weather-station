@@ -9,5 +9,5 @@ spotify:
 open-weather:
   credential: ece9972ddb4f03bb4bd686f5b1c906c8
   endpoints:
-    location-by-coordinates: api.openweathermap.org/data/2.5/weather?lat=%s&lon=%s&appid=%s&units=metric
-    location-by-city-name: api.openweathermap.org/data/2.5/weather?q=%s&appid=%s&units=metric
+    location-by-coordinates: https://api.openweathermap.org/data/2.5/weather?lat=%s&lon=%s&appid=%s&units=metric
+    location-by-city-name: https://api.openweathermap.org/data/2.5/weather?q=%s&appid=%s&units=metric

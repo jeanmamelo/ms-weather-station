@@ -20,7 +20,7 @@ public class ApplicationConfig {
     @Value("${spotify.endpoints.playlist-by-id}")
     private String spotifyEndpointsPlaylistById;
 
-    @Value("${spotify.endpoints.generate.token}")
+    @Value("${spotify.endpoints.generate-token}")
     private String spotifyEndpointsGenerateToken;
 
     @Value("${open-weather.credential}")

@@ -16,7 +16,5 @@ import java.util.List;
 public class TrackResponse {
 
     private List<PlaylistResponse> tracks;
-
-    public static TrackResponse valueOf(SpotifyPlaylistByIdResponse response) {
-    }
+    
 }

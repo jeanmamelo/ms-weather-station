@@ -32,7 +32,7 @@ public class SpotifyClient {
     public SpotifyCategoryByIdResponse getPlaylistsByCategoryId(String categoryId) {
 
         HttpHeaders httpHeaders = new HttpHeaders();
-        httpHeaders.add(Constants.SPOTIFY_AUTHORIZATION, getToken());
+        httpHeaders.add(Constants.SPOTIFY_AUTHORIZATION, Constants.SPOTIFY_BEARER.concat(getToken()));
         httpHeaders.add("Content-Type", MediaType.APPLICATION_JSON_VALUE);
 
         HttpEntity<?> entity = new HttpEntity<>(httpHeaders);
@@ -46,7 +46,7 @@ public class SpotifyClient {
     public SpotifyPlaylistByIdResponse getTracksByPlaylistId(String playlistId) {
 
         HttpHeaders httpHeaders = new HttpHeaders();
-        httpHeaders.add(Constants.SPOTIFY_AUTHORIZATION, getToken());
+        httpHeaders.add(Constants.SPOTIFY_AUTHORIZATION, Constants.SPOTIFY_BEARER.concat(getToken()));
         httpHeaders.add(Constants.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE);
 
         HttpEntity<?> entity = new HttpEntity<>(httpHeaders);
@@ -64,7 +64,7 @@ public class SpotifyClient {
                         .getBytes());
 
         HttpHeaders httpHeaders = new HttpHeaders();
-        httpHeaders.add(Constants.SPOTIFY_AUTHORIZATION, Constants.SPOTIFY_BEARER.concat(authorization));
+        httpHeaders.add(Constants.SPOTIFY_AUTHORIZATION, Constants.SPOTIFY_BASIC.concat(authorization));
         httpHeaders.add(Constants.CONTENT_TYPE, MediaType.APPLICATION_FORM_URLENCODED_VALUE);
 
         String body = "grant_type=client_credentials";
