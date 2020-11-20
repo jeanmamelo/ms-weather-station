@@ -5,6 +5,7 @@ import com.jeanmamelo.constants.Constants;
 import com.jeanmamelo.model.dto.SpotifyCategoryByIdResponse;
 import com.jeanmamelo.model.dto.SpotifyPlaylistByIdResponse;
 import com.jeanmamelo.model.dto.SpotifyTokenResponse;
+import com.jeanmamelo.model.dto.SpotifyUserByIdResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.web.client.RestTemplateBuilder;
@@ -32,7 +33,7 @@ public class SpotifyClient {
     public SpotifyCategoryByIdResponse getPlaylistsByCategoryId(String categoryId) {
 
         HttpHeaders httpHeaders = new HttpHeaders();
-        httpHeaders.add(Constants.SPOTIFY_AUTHORIZATION, Constants.SPOTIFY_BEARER.concat(getToken()));
+        httpHeaders.add(Constants.SPOTIFY_AUTHORIZATION, Constants.SPOTIFY_BEARER.concat(getToken().getAccessToken()));
         httpHeaders.add(Constants.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE);
 
         HttpEntity<?> entity = new HttpEntity<>(httpHeaders);
@@ -46,7 +47,7 @@ public class SpotifyClient {
     public SpotifyPlaylistByIdResponse getTracksByPlaylistId(String playlistId) {
 
         HttpHeaders httpHeaders = new HttpHeaders();
-        httpHeaders.add(Constants.SPOTIFY_AUTHORIZATION, Constants.SPOTIFY_BEARER.concat(getToken()));
+        httpHeaders.add(Constants.SPOTIFY_AUTHORIZATION, Constants.SPOTIFY_BEARER.concat(getToken().getAccessToken()));
         httpHeaders.add(Constants.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE);
 
         HttpEntity<?> entity = new HttpEntity<>(httpHeaders);
@@ -57,20 +58,20 @@ public class SpotifyClient {
                 entity, SpotifyPlaylistByIdResponse.class).getBody();
     }
 
-    public void getUserInfoById(String id) {
+    public SpotifyUserByIdResponse getUserInfoById(String id) {
         HttpHeaders httpHeaders = new HttpHeaders();
-        httpHeaders.add(Constants.SPOTIFY_AUTHORIZATION, Constants.SPOTIFY_BEARER.concat(getToken()));
-        httpHeaders.add("Content-Type", MediaType.APPLICATION_JSON_VALUE);
+        httpHeaders.add(Constants.SPOTIFY_AUTHORIZATION, Constants.SPOTIFY_BEARER.concat(getToken().getAccessToken()));
+        httpHeaders.add(Constants.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE);
 
         HttpEntity<?> entity = new HttpEntity<>(httpHeaders);
 
-        String url = String.format(applicationConfig.getSpotifyEndpointsPlaylistsByCategory(), id);
+        String url = String.format(applicationConfig.getSpotifyEndpointsUserById(), id);
 
-//        return restTemplateBuilder.build().exchange(url, HttpMethod.POST,
-//                entity, SpotifyCategoryByIdResponse.class).getBody();
+        return restTemplateBuilder.build().exchange(url, HttpMethod.GET,
+                entity, SpotifyUserByIdResponse.class).getBody();
     }
 
-    public String getToken() {
+    private SpotifyTokenResponse getToken() {
         String authorization = Base64.getEncoder()
                 .encodeToString((
                         applicationConfig.getSpotifyCredentialClientId() + ":" + applicationConfig.getSpotifyCredentialClientSecret())
@@ -84,12 +85,9 @@ public class SpotifyClient {
 
         HttpEntity<?> entity = new HttpEntity<>(body, httpHeaders);
 
-        String url = String.format(applicationConfig.getSpotifyEndpointsGenerateToken());
+        String url = applicationConfig.getSpotifyEndpointsGenerateToken();
 
-        SpotifyTokenResponse tokenResponse = restTemplateBuilder.build().exchange(url, HttpMethod.POST,
-                entity, SpotifyTokenResponse.class).getBody();
-
-        return tokenResponse.getAccessToken();
+        return restTemplateBuilder.build().exchange(url, HttpMethod.POST, entity, SpotifyTokenResponse.class).getBody();
     }
 
 }
