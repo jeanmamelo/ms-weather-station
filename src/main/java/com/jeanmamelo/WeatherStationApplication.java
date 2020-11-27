@@ -24,4 +24,5 @@ public class WeatherStationApplication implements ApplicationRunner {
 		log.info("--------------------- Application Arguments ---------------------");
 		log.info("MS successfully started!");
 	}
+
 }

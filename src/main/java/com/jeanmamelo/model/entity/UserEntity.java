@@ -52,5 +52,4 @@ public class UserEntity {
                 .age(userRequest.getAge())
                 .build();
     }
-
 }

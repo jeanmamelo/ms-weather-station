@@ -15,5 +15,4 @@ public class ArtistResponse {
 
     private String name;
 
-
 }
