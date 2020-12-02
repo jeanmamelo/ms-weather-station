@@ -1,6 +1,7 @@
 package com.jeanmamelo.service;
 
 import com.jeanmamelo.exception.NotFoundException;
+import com.jeanmamelo.exception.UnprocessableEntityException;
 import com.jeanmamelo.model.dto.SpotifyUserByIdResponse;
 import com.jeanmamelo.model.dto.UserRequest;
 import com.jeanmamelo.model.dto.UserResponse;
@@ -25,6 +26,11 @@ public class UserService {
     private final UserRepository userRepository;
 
     public Integer createUser(UserRequest userRequest) {
+        log.info("Creating new user... \n {}", userRequest);
+        userRepository.findBySpotifyId(userRequest.getSpotifyId()).ifPresent(user -> {
+            log.error("The following spotifyId already exists: {}", user.getSpotifyId());
+            throw new UnprocessableEntityException("422.000");
+        });
         SpotifyUserByIdResponse spotifyInfo = spotifyClient.getUserInfoById(userRequest.getSpotifyId());
 
         String image = !spotifyInfo.getImages().isEmpty() ? spotifyInfo.getImages().get(0).getUrl() : "";
@@ -34,10 +40,12 @@ public class UserService {
         userEntity.setImage(image);
 
         UserEntity newUser = userRepository.save(userEntity);
+        log.info("The user was saved successfully.");
         return newUser.getId();
     }
 
     public List<UserResponse> getAllUsers(Pageable pageable) {
+        log.info("Getting all users...");
         return userRepository.findAll(pageable)
                 .stream()
                 .map(UserResponse::valueOf)
@@ -45,12 +53,14 @@ public class UserService {
     }
 
     public UserResponse getUserById(Integer id) {
+        log.info("Getting user based on ID: {}", id);
         return userRepository.findById(id)
                 .map(UserResponse::valueOf)
                 .orElseThrow(NotFoundException::new);
     }
 
     public void deleteUserById(Integer id) {
+        log.info("Deleting user based on ID: {}", id);
         Optional<UserEntity> userEntity = userRepository.findById(id);
 
         if(userEntity.isPresent()) {

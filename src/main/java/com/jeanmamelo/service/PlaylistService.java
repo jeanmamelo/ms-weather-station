@@ -26,7 +26,7 @@ public class PlaylistService {
     private final SpotifyClient spotifyClient;
 
     public TrackResponse getTracks(String cityName, String lat, String lon) {
-
+        log.info("Getting tracks...");
         OpenWeatherResponse temperatureByCityName = openWeatherClient.getTemperatureByLocation(cityName, lat, lon);
 
         String category = getCategory(temperatureByCityName);
@@ -36,7 +36,10 @@ public class PlaylistService {
         SpotifyItemsResponse playlistId = spotifyPlaylists.getPlaylists().getItems()
                 .stream()
                 .findFirst()
-                .orElseThrow(() -> new UnprocessableEntityException("422.001"));
+                .orElseThrow(() -> {
+                    log.error("It wasn't possible to retrieve playlists for the given category ID: {}", category);
+                    throw new UnprocessableEntityException("422.001");
+                });
 
         SpotifyPlaylistByIdResponse tracksByPlaylistId = spotifyClient.getTracksByPlaylistId(playlistId.getId());
 
@@ -46,17 +49,19 @@ public class PlaylistService {
     }
 
     private String getCategory(OpenWeatherResponse temperatureByCityName) {
-        String response;
+        log.info("Getting category based on the temperature: {}", temperatureByCityName.getMain().getTemp());
+        String category;
 
         if(temperatureByCityName.getMain().getTemp() >= 0 && temperatureByCityName.getMain().getTemp() <= 10) {
-            response = CategoryEnum.CHILL.getDescription();
+            category = CategoryEnum.CHILL.getDescription();
         } else if(temperatureByCityName.getMain().getTemp() > 10 && temperatureByCityName.getMain().getTemp() <= 20) {
-            response = CategoryEnum.FOCUS.getDescription();
+            category = CategoryEnum.FOCUS.getDescription();
         } else if(temperatureByCityName.getMain().getTemp() > 20) {
-            response = CategoryEnum.PARTY.getDescription();
+            category = CategoryEnum.PARTY.getDescription();
         } else {
-            response = CategoryEnum.MOOD.getDescription();
+            category = CategoryEnum.MOOD.getDescription();
         }
-        return response;
+        log.info("Got category with success: {}", category);
+        return category;
     }
 }

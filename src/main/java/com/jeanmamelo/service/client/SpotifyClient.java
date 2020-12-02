@@ -2,6 +2,7 @@ package com.jeanmamelo.service.client;
 
 import com.jeanmamelo.configuration.ApplicationConfig;
 import com.jeanmamelo.constants.Constants;
+import com.jeanmamelo.exception.UnprocessableEntityException;
 import com.jeanmamelo.model.dto.SpotifyCategoryByIdResponse;
 import com.jeanmamelo.model.dto.SpotifyPlaylistByIdResponse;
 import com.jeanmamelo.model.dto.SpotifyTokenResponse;
@@ -31,63 +32,84 @@ public class SpotifyClient {
      * @return {@SpotifyCategoryByIdResponse}
      */
     public SpotifyCategoryByIdResponse getPlaylistsByCategoryId(String categoryId) {
+        log.info("Calling Spotify API with the following categoryId: {}", categoryId);
+        try {
+            HttpHeaders httpHeaders = new HttpHeaders();
+            httpHeaders.add(Constants.SPOTIFY_AUTHORIZATION, Constants.SPOTIFY_BEARER.concat(getToken().getAccessToken()));
+            httpHeaders.add(Constants.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE);
 
-        HttpHeaders httpHeaders = new HttpHeaders();
-        httpHeaders.add(Constants.SPOTIFY_AUTHORIZATION, Constants.SPOTIFY_BEARER.concat(getToken().getAccessToken()));
-        httpHeaders.add(Constants.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE);
+            HttpEntity<?> entity = new HttpEntity<>(httpHeaders);
 
-        HttpEntity<?> entity = new HttpEntity<>(httpHeaders);
+            String url = String.format(applicationConfig.getSpotifyEndpointsPlaylistsByCategory(), categoryId);
 
-        String url = String.format(applicationConfig.getSpotifyEndpointsPlaylistsByCategory(), categoryId);
-
-        return restTemplateBuilder.build().exchange(url, HttpMethod.GET,
-                entity, SpotifyCategoryByIdResponse.class).getBody();
+            return restTemplateBuilder.build().exchange(url, HttpMethod.GET,
+                    entity, SpotifyCategoryByIdResponse.class).getBody();
+        } catch (Exception e) {
+            log.error("Error on retrieving categoryId from Spotify API. Details: {} \n Error: {}", e.getMessage(), e);
+            throw new UnprocessableEntityException("422.003");
+        }
     }
 
     public SpotifyPlaylistByIdResponse getTracksByPlaylistId(String playlistId) {
+        log.info("Calling Spotify API with the following playlistId: {}", playlistId);
+        try {
+            HttpHeaders httpHeaders = new HttpHeaders();
+            httpHeaders.add(Constants.SPOTIFY_AUTHORIZATION, Constants.SPOTIFY_BEARER.concat(getToken().getAccessToken()));
+            httpHeaders.add(Constants.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE);
 
-        HttpHeaders httpHeaders = new HttpHeaders();
-        httpHeaders.add(Constants.SPOTIFY_AUTHORIZATION, Constants.SPOTIFY_BEARER.concat(getToken().getAccessToken()));
-        httpHeaders.add(Constants.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE);
+            HttpEntity<?> entity = new HttpEntity<>(httpHeaders);
 
-        HttpEntity<?> entity = new HttpEntity<>(httpHeaders);
+            String url = String.format(applicationConfig.getSpotifyEndpointsPlaylistById(), playlistId);
 
-        String url = String.format(applicationConfig.getSpotifyEndpointsPlaylistById(), playlistId);
-
-        return restTemplateBuilder.build().exchange(url, HttpMethod.GET,
-                entity, SpotifyPlaylistByIdResponse.class).getBody();
+            return restTemplateBuilder.build().exchange(url, HttpMethod.GET,
+                    entity, SpotifyPlaylistByIdResponse.class).getBody();
+        } catch (Exception e) {
+            log.error("Error on retrieving playlistId from Spotify API. Details: {} \n Error: {}", e.getMessage(), e);
+            throw new UnprocessableEntityException("422.004");
+        }
     }
 
-    public SpotifyUserByIdResponse getUserInfoById(String id) {
-        HttpHeaders httpHeaders = new HttpHeaders();
-        httpHeaders.add(Constants.SPOTIFY_AUTHORIZATION, Constants.SPOTIFY_BEARER.concat(getToken().getAccessToken()));
-        httpHeaders.add(Constants.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE);
+    public SpotifyUserByIdResponse getUserInfoById(String spotifyId) {
+        log.info("Calling Spotify API with the following spotify ID: {}", spotifyId);
+        try {
+            HttpHeaders httpHeaders = new HttpHeaders();
+            httpHeaders.add(Constants.SPOTIFY_AUTHORIZATION, Constants.SPOTIFY_BEARER.concat(getToken().getAccessToken()));
+            httpHeaders.add(Constants.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE);
 
-        HttpEntity<?> entity = new HttpEntity<>(httpHeaders);
+            HttpEntity<?> entity = new HttpEntity<>(httpHeaders);
 
-        String url = String.format(applicationConfig.getSpotifyEndpointsUserById(), id);
+            String url = String.format(applicationConfig.getSpotifyEndpointsUserById(), spotifyId);
 
-        return restTemplateBuilder.build().exchange(url, HttpMethod.GET,
-                entity, SpotifyUserByIdResponse.class).getBody();
+            return restTemplateBuilder.build().exchange(url, HttpMethod.GET,
+                    entity, SpotifyUserByIdResponse.class).getBody();
+        } catch (Exception e) {
+            log.error("Error on retrieving user information from Spotify API. Details: {} \n Error: {}", e.getMessage(), e);
+            throw new UnprocessableEntityException("422.005");
+        }
     }
 
     private SpotifyTokenResponse getToken() {
-        String authorization = Base64.getEncoder()
-                .encodeToString((
-                        applicationConfig.getSpotifyCredentialClientId() + ":" + applicationConfig.getSpotifyCredentialClientSecret())
-                        .getBytes());
+        log.info("Generating Spotify token...");
+        try {
+            String authorization = Base64.getEncoder()
+                    .encodeToString((
+                            applicationConfig.getSpotifyCredentialClientId() + ":" + applicationConfig.getSpotifyCredentialClientSecret())
+                            .getBytes());
 
-        HttpHeaders httpHeaders = new HttpHeaders();
-        httpHeaders.add(Constants.SPOTIFY_AUTHORIZATION, Constants.SPOTIFY_BASIC.concat(authorization));
-        httpHeaders.add(Constants.CONTENT_TYPE, MediaType.APPLICATION_FORM_URLENCODED_VALUE);
+            HttpHeaders httpHeaders = new HttpHeaders();
+            httpHeaders.add(Constants.SPOTIFY_AUTHORIZATION, Constants.SPOTIFY_BASIC.concat(authorization));
+            httpHeaders.add(Constants.CONTENT_TYPE, MediaType.APPLICATION_FORM_URLENCODED_VALUE);
 
-        String body = "grant_type=client_credentials";
+            String body = "grant_type=client_credentials";
 
-        HttpEntity<?> entity = new HttpEntity<>(body, httpHeaders);
+            HttpEntity<?> entity = new HttpEntity<>(body, httpHeaders);
 
-        String url = applicationConfig.getSpotifyEndpointsGenerateToken();
+            String url = applicationConfig.getSpotifyEndpointsGenerateToken();
 
-        return restTemplateBuilder.build().exchange(url, HttpMethod.POST, entity, SpotifyTokenResponse.class).getBody();
+            return restTemplateBuilder.build().exchange(url, HttpMethod.POST, entity, SpotifyTokenResponse.class).getBody();
+        } catch (Exception e) {
+            log.error("Error on generating Spotify token. Details: {} \n Error: {}", e.getMessage(), e);
+            throw new UnprocessableEntityException("422.002");
+        }
     }
-
 }
