@@ -1,5 +1,7 @@
 package com.jeanmamelo.controller;
 
+import com.jeanmamelo.model.dto.UserPatchRequest;
+import com.jeanmamelo.model.dto.UserPutRequest;
 import com.jeanmamelo.model.dto.UserRequest;
 import com.jeanmamelo.model.dto.UserResponse;
 import com.jeanmamelo.service.UserService;
@@ -9,8 +11,10 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -58,6 +62,26 @@ public class UserController {
             @PathVariable(name = "userId") Integer userId) {
 
         userService.deleteUserById(userId);
+        return ResponseEntity.noContent().build();
+    }
+
+    @PutMapping("/{userId}")
+    public ResponseEntity<Void> updateUserById(
+            @PathVariable(name = "userId") Integer userId,
+            @RequestBody @Valid UserPutRequest userPutRequest) {
+
+        userService.updateUserById(userId, userPutRequest);
+
+        return ResponseEntity.noContent().build();
+    }
+
+    @PatchMapping("/{userId}")
+    public ResponseEntity<Void> partialUpdateUserById(
+            @PathVariable(name = "userId") Integer userId,
+            @RequestBody @Valid UserPatchRequest userPatchRequest) {
+
+        userService.partialUpdateUserById(userId, userPatchRequest);
+
         return ResponseEntity.noContent().build();
     }
 }

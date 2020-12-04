@@ -1,5 +1,6 @@
 package com.jeanmamelo.model.entity;
 
+import com.jeanmamelo.model.dto.UserPutRequest;
 import com.jeanmamelo.model.dto.UserRequest;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -50,6 +51,17 @@ public class UserEntity {
                 .spotifyId(userRequest.getSpotifyId())
                 .fullName(userRequest.getFullName())
                 .age(userRequest.getAge())
+                .build();
+    }
+
+    public static UserEntity valueOf(UserPutRequest userPutRequest){
+        return UserEntity.builder()
+                .spotifyId(userPutRequest.getSpotifyId())
+                .fullName(userPutRequest.getFullName())
+                .age(userPutRequest.getAge())
+                .displayName(userPutRequest.getDisplayName())
+                .followers(userPutRequest.getFollowers())
+                .image(userPutRequest.getImage())
                 .build();
     }
 }

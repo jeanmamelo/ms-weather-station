@@ -36,10 +36,7 @@ public class PlaylistService {
         SpotifyItemsResponse playlistId = spotifyPlaylists.getPlaylists().getItems()
                 .stream()
                 .findFirst()
-                .orElseThrow(() -> {
-                    log.error("It wasn't possible to retrieve playlists for the given category ID: {}", category);
-                    throw new UnprocessableEntityException("422.001");
-                });
+                .orElseThrow(() -> new UnprocessableEntityException("422.001"));
 
         SpotifyPlaylistByIdResponse tracksByPlaylistId = spotifyClient.getTracksByPlaylistId(playlistId.getId());
 
