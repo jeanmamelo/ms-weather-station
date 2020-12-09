@@ -6,11 +6,13 @@ import org.springframework.boot.ApplicationRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration;
+import springfox.documentation.swagger2.annotations.EnableSwagger2;
 
 import java.util.stream.Stream;
 
 @Slf4j
 @SpringBootApplication
+@EnableSwagger2
 public class WeatherStationApplication implements ApplicationRunner {
 
 	public static void main(String[] args) {
@@ -24,5 +26,4 @@ public class WeatherStationApplication implements ApplicationRunner {
 		log.info("--------------------- Application Arguments ---------------------");
 		log.info("MS successfully started!");
 	}
-
 }

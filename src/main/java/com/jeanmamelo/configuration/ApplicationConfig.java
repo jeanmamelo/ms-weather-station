@@ -35,4 +35,7 @@ public class ApplicationConfig {
     @Value("${open-weather.endpoints.location-by-coordinates}")
     private String openWeatherEndpointsLocationByCoordinates;
 
+    @Value("${spring.redis.key-prefix.playlist}")
+    private String redisPlaylistPrefix;
+
 }
