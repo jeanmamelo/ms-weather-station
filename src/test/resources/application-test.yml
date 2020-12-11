@@ -1,0 +1,31 @@
+spring:
+  datasource:
+    username: sa
+    password: password
+    url: jdbc:h2:mem:weather
+    driver-class-name: org.h2.Driver
+  redis:
+    host:
+    port:
+    key-prefix:
+      playlist:
+  jpa:
+    hibernate:
+      ddl-auto: none
+  flyway:
+    enabled: false
+
+spotify:
+  credentials:
+    client-id:
+    client-secret:
+  endpoints:
+    playlists-by-category:
+    playlist-by-id:
+    generate-token:
+    user-by-id:
+open-weather:
+  credential:
+  endpoints:
+    location-by-coordinates:
+    location-by-city-name:
