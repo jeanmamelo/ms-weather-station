@@ -47,7 +47,7 @@ public class PlaylistService {
 
         TrackResponse response = TrackResponse.builder().tracks(tracks).build();
 
-        redis.set(openWeatherResponse.getLocationName(), response);
+//        redis.set(openWeatherResponse.getLocationName(), response);
 
         return response;
     }

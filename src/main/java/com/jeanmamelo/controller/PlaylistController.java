@@ -30,9 +30,9 @@ public class PlaylistController {
             TrackResponse tracks = playlistService.getTracks(cityName, lat, lon);
             return ResponseEntity.status(HttpStatus.OK).header("Cache", "false").body(tracks);
         } catch(Exception e) {
-            TrackResponse tracks = redis.get(cityName, TrackResponse.class)
-                    .orElseThrow(() -> new UnprocessableEntityException("422.007"));
-            return ResponseEntity.status(HttpStatus.OK).header("Cache", "true").body(tracks);
+//            TrackResponse tracks = redis.get(cityName, TrackResponse.class)
+//                    .orElseThrow(() -> new UnprocessableEntityException("422.007"));
+            return ResponseEntity.status(HttpStatus.OK).header("Cache", "true").body(TrackResponse.builder().build());
         }
     }
 }
